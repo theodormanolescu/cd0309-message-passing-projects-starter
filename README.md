@@ -76,20 +76,25 @@ Type `exit` to exit the virtual OS and you will find yourself back in your compu
 Afterwards, you can test that `kubectl` works by running a command like `kubectl describe services`. It should not return any errors.
 
 ### Steps
-1. `kubectl apply -f deployment/db-configmap.yaml` - Set up environment variables for the pods
-2. `kubectl apply -f deployment/db-secret.yaml` - Set up secrets for the pods
-3. `kubectl apply -f deployment/postgres.yaml` - Set up a Postgres database running PostGIS
-4. `kubectl apply -f deployment/udaconnect-api.yaml` - Set up the service and deployment for the API
-5. `kubectl apply -f deployment/udaconnect-app.yaml` - Set up the service and deployment for the web app
-6. `sh scripts/run_db_command.sh <POD_NAME>` - Seed your database against the `postgres` pod. (`kubectl get pods` will give you the `POD_NAME`)
+1. `kubectl apply -f deployment/01-zookeper.yaml` - Set up the service and deployment for Zookeeper
+2. `kubectl apply -f deployment/02-kafka-configmap.yaml` - Set up environment variables for Kafka
+3. `kubectl apply -f deployment/02-kafka.yaml` - Set up the service and deployment for Kafka
+4. `kubectl apply -f deployment/db-configmap.yaml` - Set up environment variables for the pods
+5. `kubectl apply -f deployment/db-secret.yaml` - Set up secrets for the pods
+6. `kubectl apply -f deployment/postgres.yaml` - Set up a Postgres database running PostGIS
+7. `kubectl apply -f deployment/udaconnect-persons-api.yaml` - Set up the service and deployment for the API
+8. `kubectl apply -f deployment/udaconnect-app.yaml` - Set up the service and deployment for the web app
+9. `kubectl apply -f deployment/03-udaconnect-location-producer.yaml` - Set up the service and deployment for the location producer
+10. `kubectl apply -f deployment/04-udaconnect-location-consumer.yaml` - Set up the service and deployment for the location consumer
+11. `sh scripts/run_db_command.sh <POD_NAME>` - Seed your database against the `postgres` pod. (`kubectl get pods` will give you the `POD_NAME`)
 
 Manually applying each of the individual `yaml` files is cumbersome but going through each step provides some context on the content of the starter project. In practice, we would have reduced the number of steps by running the command against a directory to apply of the contents: `kubectl apply -f deployment/`.
 
 Note: The first time you run this project, you will need to seed the database with dummy data. Use the command `sh scripts/run_db_command.sh <POD_NAME>` against the `postgres` pod. (`kubectl get pods` will give you the `POD_NAME`). Subsequent runs of `kubectl apply` for making changes to deployments or services shouldn't require you to seed the database again!
 
 ### Verifying it Works
-Once the project is up and running, you should be able to see 3 deployments and 3 services in Kubernetes:
-`kubectl get pods` and `kubectl get services` - should both return `udaconnect-app`, `udaconnect-api`, and `postgres`
+Once the project is up and running, you should be able to see 8 deployments and 8 services in Kubernetes:
+`kubectl get pods` and `kubectl get services` - should both return `udaconnect-app`, `udaconnect-api`, `postgres`, `kafka-service`, `zookeeper-service`, `udaconnect-location-producer`, and `udaconnect-location-consumer`.
 
 
 These pages should also load on your web browser:
@@ -113,7 +118,8 @@ As a reminder, each module should have:
 4. `__init__.py`
 
 ### Docker Images
-`udaconnect-app` and `udaconnect-api` use docker images from `udacity/nd064-udaconnect-app` and `udacity/nd064-udaconnect-api`. To make changes to the application, build your own Docker image and push it to your own DockerHub repository. Replace the existing container registry path with your own.
+`udaconnect-app` and `udaconnect-persons-api` use docker images from `theodormanolescu/udaconnect:frontend` and `theodormanolescu/udaconnect:persons_api`. To make changes to the application, build your own Docker image and push it to your own DockerHub repository. Replace the existing container registry path with your own.
+`udaconnect-location-producer` and `udaconnect-location-consumer` use docker images from `theodormanolescu/udaconnect:producer` and `theodormanolescu/udaconnect:consumer`. To make changes to the application, build your own Docker image and push it to your own DockerHub repository. Replace the existing container registry path with your own.
 
 ## Configs and Secrets
 In `deployment/db-secret.yaml`, the secret variable is `d293aW1zb3NlY3VyZQ==`. The value is simply encoded and not encrypted -- this is ***not*** secure! Anyone can decode it to see what it is.
