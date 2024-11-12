@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+message LocationMessage {
+    int32 person_id = 1;
+    int32 longitude = 2;
+    int32 latitude = 3;
+}
+
+service LocationService {
+    rpc Create(LocationMessage) returns (LocationMessage);
+}
+
+=======================================================================================================================
+
+The gRPC server is hosted by the 'udaconnect-location-producer' pod on port 5005.
+To access the gRPC server, you can use the following command to port-forward the pod to your local machine:
+```bash
+kubectl port-forward udaconnect-location-producer-xxxxxxxxxx-xxxxx 5005
+```
+In Postman, you can use the following details to send a request to the gRPC server:
+url: 127.0.0.1:5005
+Message:
+{
+    "latitude": 123,
+    "longitude": 123,
+    "person_id": 6
+}

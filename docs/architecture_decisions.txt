@@ -1,0 +1,14 @@
+1.Persons Service
+Communication Protocol: REST API
+Manages the generation and retrieval of Persons from the database using a REST api.
+
+2.Connections Service
+Communication Protocol: REST API
+Manages the retrieval of Connections from the database using a REST api.
+
+3. Locations Microservice:
+Communication Protocol: gRPC
+Kafka handles high data volumes from mobile devices efficiently. gRPC ensures structured, secure, and fast data transmission before data storage in the database.
+
+4. Frontend
+User interface for interacting with the services.

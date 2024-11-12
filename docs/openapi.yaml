@@ -1,0 +1,120 @@
+openapi: 3.0.0
+servers:
+  - description: Local
+    url: http://localhost:30001
+info:
+  title: UdaConnect Persons API
+  version: 1.0.0
+paths:
+  /api/persons:
+    get:
+      description: returns all available persons
+      responses:
+        '200':
+          description: List persons
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Person'
+  '/api/persons/{personId}':
+    get:
+      description: returns specific person
+      parameters:
+        - name: personId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List persons
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Person'
+  '/api/persons/{personId}/connection':
+    get:
+      description: returns connections for specific person
+      parameters:
+        - name: personId
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: "1"
+        - in: query
+          name: start_date
+          description: start from
+          schema:
+            type: string
+            example: "2020-08-01"
+        - in: query
+          name: end_date
+          description: untill
+          schema:
+            type: string
+            example: "2024-11-11"
+      responses:
+        '200':
+          description: List persons
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Connection'
+components:
+  schemas:
+    Person:
+      type: object
+      required:
+        - id
+        - first_name
+        - last_name
+        - company_name
+      properties:
+        id:
+          type: integer
+          example: 1
+        first_name:
+          type: string
+          example: "Pam"
+        last_name:
+          type: string
+          example: "Trexler"
+        company_name:
+          type: string
+          example: "Hampton, Hampton and McQuill"
+    Location:
+      type: object
+      required:
+        - person_id
+        - longitude
+        - creation_time
+        - latitude
+        - id
+      properties:
+        id:
+          type: integer
+          example: 31
+        person_id:
+          type: integer
+          example: 5
+        creation_time:
+          type: string
+          example: "2020-08-15T10:37:06"
+        longitude:
+          type: string
+          example: "37.553441"
+        latitude:
+          type: string
+          example: "-122.290524"
+    Connection:
+      type: object
+      properties:
+        location:
+          $ref: '#/components/schemas/Location'
+        person:
+          $ref: '#/components/schemas/Person'
